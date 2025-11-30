@@ -775,7 +775,7 @@ with tab3:
                     for j, reason in enumerate(sig['reasoning'], 1):
                         st.markdown(f"{j}. {reason}")
         else:
-            st.info("🔍 No 70%+ confidence signals found in the last 20 days. This means there haven't been many high-probability setups recently.")
+            st.info("🔍 No 70%+ confidence signals found in the last 365 days. This means there haven't been many high-probability setups recently.")
     else:
         st.error("Unable to load data for signal scanning.")
 
