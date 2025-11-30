@@ -656,15 +656,46 @@ with tab3:
             }).dropna()
     
     if scan_df is not None and not scan_df.empty:
+        # Fetch HTF data for multi-timeframe confirmation
+        htf_scan_df = None
+        try:
+            if timeframe == "30-Minute":
+                htf_scan_df = fetch_stock_data(selected_ticker, period="60d", interval="1h")
+                if htf_scan_df is not None and not htf_scan_df.empty:
+                    htf_scan_df = htf_scan_df.resample('4H').agg({
+                        'open': 'first',
+                        'high': 'max',
+                        'low': 'min',
+                        'close': 'last',
+                        'volume': 'sum'
+                    }).dropna()
+            elif timeframe == "1-Hour":
+                htf_scan_df = fetch_stock_data(selected_ticker, period="1y", interval="1d")
+            elif timeframe == "4-Hour":
+                htf_scan_df = fetch_stock_data(selected_ticker, period="1y", interval="1d")
+            elif timeframe == "Daily":
+                htf_scan_df = fetch_stock_data(selected_ticker, period="2y", interval="1d")
+                if htf_scan_df is not None and not htf_scan_df.empty:
+                    htf_scan_df = htf_scan_df.resample('W').agg({
+                        'open': 'first',
+                        'high': 'max',
+                        'low': 'min',
+                        'close': 'last',
+                        'volume': 'sum'
+                    }).dropna()
+        except Exception as e:
+            st.caption(f"⚠️ Could not fetch HTF data: {e}")
+            htf_scan_df = None
+        
         # Scan through each candle for high confidence signals
         high_conf_signals = []
         
         min_required = min(50, len(scan_df) // 3)
         
         for idx in range(min_required, len(scan_df)):
-            # Generate signal for this point in time
+            # Generate signal for this point in time (with HTF data)
             historical_slice = scan_df.iloc[:idx+1].copy()
-            signal_result = generate_signal(historical_slice)
+            signal_result = generate_signal(historical_slice, htf_df=htf_scan_df)
             
             # Only keep if confidence >= 70%
             if signal_result['confidence'] >= 70 and signal_result['signal'] != 'NEUTRAL':
