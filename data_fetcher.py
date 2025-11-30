@@ -100,8 +100,15 @@ def get_multiple_timeframes(ticker, periods=None):
     
     return data
 
-# MAG7 stocks and SPY
-MAG7_STOCKS = {
+# Major indices and MAG7 stocks
+AVAILABLE_TICKERS = {
+    # Major Indices (Best for ICT - High Liquidity)
+    "SPY": "SPDR S&P 500 ETF (S&P 500)",
+    "QQQ": "Invesco QQQ (Nasdaq 100)",
+    "DIA": "SPDR Dow Jones ETF (Dow 30)",
+    "IWM": "iShares Russell 2000 ETF",
+    
+    # MAG7 Tech Stocks
     "AAPL": "Apple Inc.",
     "MSFT": "Microsoft Corporation",
     "GOOGL": "Alphabet Inc.",
@@ -109,9 +116,8 @@ MAG7_STOCKS = {
     "META": "Meta Platforms Inc.",
     "TSLA": "Tesla Inc.",
     "NVDA": "NVIDIA Corporation",
-    "SPY": "SPDR S&P 500 ETF"
 }
 
 def get_available_tickers():
     """Return dict of available tickers"""
-    return MAG7_STOCKS
+    return AVAILABLE_TICKERS
