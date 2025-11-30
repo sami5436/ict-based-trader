@@ -636,14 +636,14 @@ with tab3:
     st.header(f"⭐ High Confidence Signals - {selected_ticker}")
     
     st.markdown(f"""
-    **Showing all signals from the last 20 days with 70%+ confidence.**
+    **Showing all signals from the last 365 days with 70%+ confidence.**
     
     These are the strongest setups identified by the system - the ones where multiple ICT strategies aligned perfectly.
     """)
     
-    with st.spinner(f"Scanning last 20 days for high confidence signals..."):
-        # Fetch data for signal scanning
-        scan_df = fetch_stock_data(selected_ticker, period="20d", interval=interval)
+    with st.spinner(f"Scanning last 365 days for high confidence signals..."):
+        # Fetch data for signal scanning (1 year)
+        scan_df = fetch_stock_data(selected_ticker, period="1y", interval=interval)
         
         # Resample if needed
         if timeframe == "4-Hour" and interval == "1h" and scan_df is not None:
@@ -724,7 +724,7 @@ with tab3:
                     })
         
         if high_conf_signals:
-            st.success(f"🎯 Found {len(high_conf_signals)} high-confidence (70%+) signals in the last 20 days!")
+            st.success(f"🎯 Found {len(high_conf_signals)} high-confidence (70%+) signals in the last 365 days!")
             
             # Summary stats
             correct_count = sum(1 for s in high_conf_signals if s['correct'])
